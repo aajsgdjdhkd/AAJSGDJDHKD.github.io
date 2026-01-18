@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>统计页面</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .counter { font-size: 48px; color: #2196F3; }
+    </style>
+    <script>
+        // 获取URL参数
+        function getUrlParam(name) {
+            return new URLSearchParams(window.location.search).get(name);
+        }
+        
+        // 页面加载时执行
+        window.onload = function() {
+            var device = getUrlParam('device') || 'unknown';
+            var timestamp = new Date().toLocaleString();
+            
+            // 显示访问信息
+            document.getElementById('device').textContent = device;
+            document.getElementById('time').textContent = timestamp;
+            
+            // 更新计数器
+            var count = localStorage.getItem('visit_count') || 0;
+            count = parseInt(count) + 1;
+            localStorage.setItem('visit_count', count);
+            document.getElementById('counter').textContent = count;
+            
+            // 保存访问记录
+            var visits = JSON.parse(localStorage.getItem('visits') || '[]');
+            visits.push({
+                device: device,
+                time: timestamp
+            });
+            localStorage.setItem('visits', JSON.stringify(visits.slice(-100))); // 保存最近100条
+            
+            // 显示访问列表
+            displayVisits(visits);
+        };
+        
+        function displayVisits(visits) {
+            var list = document.getElementById('visit-list');
+            list.innerHTML = '';
+            visits.slice().reverse().forEach(function(visit, index) {
+                var li = document.createElement('li');
+                li.textContent = (index + 1) + '. ' + visit.time + ' - ' + visit.device;
+                list.appendChild(li);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>📊 应用访问统计</h1>
+    
+    <div>
+        <h2>总访问次数：<span id="counter" class="counter">0</span></h2>
+        <p>当前访问设备：<span id="device"></span></p>
+        <p>访问时间：<span id="time"></span></p>
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <h3>最近访问记录：</h3>
+        <ul id="visit-list"></ul>
+    </div>
+    
+    <div style="margin-top: 30px; color: #666; font-size: 12px;">
+        <p>提示：每次用户安装APP都会访问这个页面</p>
+        <p>刷新页面查看最新统计</p>
+    </div>
+</body>
+</html>
