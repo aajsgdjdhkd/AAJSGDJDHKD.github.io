@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS自动化脚本执行器 - 下载</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        header {
+            background: linear-gradient(90deg, #3f51b5, #5c6bc0);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #ff9800, #ff5722);
+            border-radius: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: 5px solid white;
+        }
+        
+        .app-icon i {
+            font-size: 60px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .description {
+            margin-bottom: 40px;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+        
+        .description h2 {
+            color: #3f51b5;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #e8eaf6;
+            padding-bottom: 10px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .feature {
+            background-color: #f5f7ff;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #3f51b5;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(63, 81, 181, 0.1);
+        }
+        
+        .feature i {
+            font-size: 2rem;
+            color: #3f51b5;
+            margin-bottom: 15px;
+        }
+        
+        .feature h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #1a237e;
+        }
+        
+        .download-section {
+            text-align: center;
+            padding: 30px;
+            background-color: #f9f9ff;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 2px dashed #c5cae9;
+        }
+        
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ff9800, #ff5722);
+            color: white;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 87, 34, 0.3);
+            margin: 20px 0;
+            text-decoration: none;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 87, 34, 0.4);
+            background: linear-gradient(135deg, #ff5722, #ff9800);
+        }
+        
+        .download-btn i {
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .file-info {
+            margin-top: 25px;
+            font-size: 1rem;
+            color: #666;
+            background-color: #e8eaf6;
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+            background-color: #f1f3f9;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.95rem;
+        }
+        
+        .requirements {
+            background-color: #e3f2fd;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .requirements h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .requirements ul {
+            list-style-position: inside;
+            color: #37474f;
+        }
+        
+        .requirements li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .download-btn {
+                padding: 18px 40px;
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 20px;
+            }
+            
+            .app-icon {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .app-icon i {
+                font-size: 50px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="app-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+            </div>
+            <h1>JS自动化脚本执行器</h1>
+            <p class="tagline">强大的JavaScript自动化工具，简化重复性任务，提升工作效率</p>
+        </header>
+        
+        <div class="content">
+            <div class="description">
+                <h2>关于JS自动化脚本执行器</h2>
+                <p>JS自动化脚本执行器是一款功能强大的桌面应用程序，允许用户编写、管理和执行JavaScript自动化脚本。无论是网页数据提取、自动化测试、批量文件处理还是系统任务自动化，本工具都能提供直观的界面和强大的API支持。</p>
+                <p>支持跨平台运行，提供丰富的预构建脚本库，并允许用户自定义脚本以满足特定需求。无论您是开发人员、测试工程师还是普通用户，都能通过简单的脚本实现复杂的自动化任务。</p>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-code"></i>
+                    <h3>可视化脚本编辑</h3>
+                    <p>提供代码高亮、智能提示和实时错误检查，使脚本编写更加高效准确。</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-play-circle"></i>
+                    <h3>一键执行</h3>
+                    <p>支持单个脚本或批量脚本执行，实时显示执行结果和日志信息。</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-cogs"></i>
+                    <h3>丰富API</h3>
+                    <p>提供文件操作、网络请求、界面交互等数百个API，满足各种自动化需求。</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>安全沙箱</h3>
+                    <p>脚本在隔离的沙箱环境中运行，确保系统安全，防止恶意代码破坏。</p>
+                </div>
+            </div>
+            
+            <div class="requirements">
+                <h3>系统要求</h3>
+                <ul>
+                    <li><strong>操作系统：</strong>Windows 10/11, macOS 10.14+, Linux (Ubuntu 18.04+)</li>
+                    <li><strong>内存：</strong>至少4GB RAM（推荐8GB）</li>
+                    <li><strong>存储空间：</strong>至少200MB可用空间</li>
+                    <li><strong>其他：</strong>需要安装Node.js 14.0+（安装包已包含）</li>
+                </ul>
+            </div>
+            
+            <div class="download-section">
+                <h2>立即下载 JS自动化脚本执行器</h2>
+                <p>当前版本：v2.5.1 | 更新日期：2023年10月15日 | 文件大小：85.7 MB</p>
+                
+                <a href="https://123.com" class="download-btn" id="downloadBtn">
+                    <i class="fas fa-download"></i> 立即下载
+                </a>
+                
+                <div class="file-info">
+                    <p><i class="fas fa-info-circle"></i> 下载文件：JS-Automation-Script-Runner-Setup-v2.5.1.exe</p>
+                    <p><i class="fas fa-shield-alt"></i> 安全验证：已通过所有主流杀毒软件检测</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 JS自动化脚本执行器 版权所有 | 隐私政策 | 用户协议</p>
+            <p>联系邮箱：support@js-automation.com | 官方社区：community.js-automation.com</p>
+            <p>本软件仅供学习和合法用途，请勿用于任何非法目的。</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', function(e) {
+            // 添加下载动画效果
+            const btn = e.target.closest('.download-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 准备下载...';
+            btn.style.pointerEvents = 'none';
+            
+            // 模拟下载处理过程
+            setTimeout(() => {
+                // 实际跳转在href中完成，这里只是视觉效果
+                btn.innerHTML = '<i class="fas fa-check"></i> 开始下载！';
+                
+                // 2秒后恢复按钮状态（实际上下载已经开始）
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-download"></i> 立即下载';
+                    btn.style.pointerEvents = 'auto';
+                }, 2000);
+            }, 1500);
+        });
+        
+        // 添加页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const features = document.querySelectorAll('.feature');
+            features.forEach((feature, index) => {
+                feature.style.animationDelay = `${index * 0.2}s`;
+                feature.classList.add('animate-feature');
+            });
+        });
+    </script>
+</body>
+</html>
