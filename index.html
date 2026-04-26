@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>星空聊天室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 550px;
+            height: 95vh;
+            background: #fff;
+            border-radius: 40px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        /* 头部 - 单独区域 */
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 24px 24px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .chat-header h1 {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .chat-header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            margin-top: 6px;
+        }
+        
+        /* 在线人数 - 独立显示 */
+        .online-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+        
+        .online-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #fff;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 昵称设置 - 单独一行 */
+        .nickname-area {
+            background: #f8f9fa;
+            padding: 12px 20px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .nickname-area input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+        }
+        
+        .nickname-area input:focus {
+            border-color: #667eea;
+        }
+        
+        .nickname-area button {
+            padding: 10px 20px;
+            background: #667eea;
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        /* 消息区域 - 独立滚动 */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #ffffff;
+        }
+        
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        /* 消息样式 - 左右分明 */
+        .message-item {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 自己发的消息靠右 */
+        .message-item.self {
+            align-items: flex-end;
+        }
+        
+        /* 别人发的消息靠左 */
+        .message-item.other {
+            align-items: flex-start;
+        }
+        
+        /* 系统消息居中 */
+        .message-item.system {
+            align-items: center;
+        }
+        
+        /* 消息气泡 */
+        .message-bubble {
+            max-width: 75%;
+            padding: 10px 16px;
+            border-radius: 20px;
+            word-wrap: break-word;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        
+        .message-item.self .message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message-item.other .message-bubble {
+            background: #f0f2f5;
+            color: #1a1a2e;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-item.system .message-bubble {
+            background: #f1f3f5;
+            color: #6c757d;
+            font-size: 12px;
+            padding: 6px 14px;
+            border-radius: 30px;
+        }
+        
+        /* 昵称和时间 */
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            font-size: 11px;
+            padding: 0 4px;
+        }
+        
+        .message-item.self .message-meta {
+            justify-content: flex-end;
+        }
+        
+        .message-name {
+            color: #764ba2;
+            font-weight: 500;
+        }
+        
+        .message-item.self .message-name {
+            color: #667eea;
+        }
+        
+        .message-time {
+            color: #aaa;
+        }
+        
+        /* 输入区域 - 单独一行 */
+        .input-area {
+            background: #fff;
+            padding: 16px 20px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid #eee;
+        }
+        
+        .input-area input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            font-size: 15px;
+            outline: none;
+            background: #f8f9fa;
+        }
+        
+        .input-area input:focus {
+            border-color: #667eea;
+            background: #fff;
+        }
+        
+        .input-area button {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+        
+        .input-area button:active {
+            transform: scale(0.94);
+        }
+        
+        /* 状态栏 - 单独一行 */
+        .status-bar {
+            padding: 8px 20px;
+            text-align: center;
+            font-size: 11px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        
+        .status-bar.connected {
+            color: #10b981;
+        }
+        
+        .status-bar.disconnected {
+            color: #ef4444;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message-item {
+            animation: fadeIn 0.2s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- 头部区域 -->
+        <div class="chat-header">
+            <h1>💬 星空聊天室</h1>
+            <p>WebSocket · 实时对话</p>
+            <div class="online-area">
+                <div class="online-badge" id="onlineCount">0 人在线</div>
+            </div>
+        </div>
+        
+        <!-- 昵称设置区域 -->
+        <div class="nickname-area">
+            <input type="text" id="nicknameInput" placeholder="输入昵称..." maxlength="16">
+            <button id="setNicknameBtn">设置昵称</button>
+        </div>
+        
+        <!-- 消息列表区域 -->
+        <div class="chat-messages" id="messages"></div>
+        
+        <!-- 输入区域 -->
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="输入消息..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">➤</button>
+        </div>
+        
+        <!-- 状态栏 -->
+        <div class="status-bar disconnected" id="statusBar">⚫ 连接中...</div>
+    </div>
+
+    <script>
+        let ws = null;
+        let connected = false;
+        let myNickname = '游客' + Math.floor(Math.random() * 1000);
+        
+        // 你的 Railway 服务端地址
+        const WS_URL = 'wss://fultj-production-a1f9.up.railway.app';
+        
+        // 页面元素
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const nicknameInput = document.getElementById('nicknameInput');
+        const setNicknameBtn = document.getElementById('setNicknameBtn');
+        const statusBar = document.getElementById('statusBar');
+        const onlineCountSpan = document.getElementById('onlineCount');
+        
+        // 设置默认昵称
+        nicknameInput.value = myNickname;
+        
+        // 设置昵称
+        setNicknameBtn.addEventListener('click', function() {
+            let newName = nicknameInput.value.trim();
+            if (newName === '') {
+                alert('昵称不能为空');
+                return;
+            }
+            if (newName.length > 16) {
+                alert('昵称不能超过16个字符');
+                return;
+            }
+            myNickname = newName;
+            addMessage('系统', '你的昵称已更改为: ' + myNickname, true);
+        });
+        
+        function connect() {
+            statusBar.className = 'status-bar disconnected';
+            statusBar.innerHTML = '⚫ 连接中...';
+            
+            ws = new WebSocket(WS_URL);
+            
+            ws.onopen = function() {
+                connected = true;
+                statusBar.className = 'status-bar connected';
+                statusBar.innerHTML = '🟢 已连接';
+                addMessage('系统', '欢迎来到星空聊天室~', true);
+            };
+            
+            ws.onmessage = function(event) {
+                let data = event.data;
+                console.log('收到:', data);
+                
+                // 解析在线人数
+                if (data.startsWith('【系统】当前在线人数:')) {
+                    let count = data.match(/\d+/);
+                    if (count) {
+                        onlineCountSpan.innerHTML = count[0] + ' 人在线';
+                    }
+                }
+                
+                // 解析普通消息 [格式: 昵称:内容]
+                if (data.includes(':')) {
+                    let colonIndex = data.indexOf(':');
+                    let sender = data.substring(0, colonIndex);
+                    let content = data.substring(colonIndex + 1);
+                    
+                    // 自己发的消息
+                    if (sender === myNickname) {
+                        addMessage('我', content, false, sender);
+                    } else {
+                        addMessage(sender, content, false, sender);
+                    }
+                    return;
+                }
+                
+                // 系统消息
+                addMessage('系统', data, true);
+            };
+            
+            ws.onerror = function(error) {
+                console.log('WebSocket错误:', error);
+                statusBar.className = 'status-bar disconnected';
+                statusBar.innerHTML = '⚫ 连接失败';
+                addMessage('系统', '连接失败，请检查网络', true);
+            };
+            
+            ws.onclose = function() {
+                connected = false;
+                statusBar.className = 'status-bar disconnected';
+                statusBar.innerHTML = '⚫ 已断开，5秒后重连...';
+                onlineCountSpan.innerHTML = '0 人在线';
+                
+                setTimeout(function() {
+                    if (!connected) connect();
+                }, 5000);
+            };
+        }
+        
+        function sendMessage() {
+            if (!connected) {
+                addMessage('系统', '未连接到服务器', true);
+                return;
+            }
+            
+            let message = messageInput.value.trim();
+            if (!message) return;
+            
+            // 发送消息到服务器
+            ws.send(message);
+            
+            // 立即显示自己发送的消息
+            addMessage('我', message, false, myNickname);
+            
+            messageInput.value = '';
+        }
+        
+        function addMessage(sender, content, isSystem, originalName) {
+            const messageDiv = document.createElement('div');
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2,'0') + ':' + 
+                           now.getMinutes().toString().padStart(2,'0');
+            
+            if (isSystem) {
+                messageDiv.className = 'message-item system';
+                messageDiv.innerHTML = `
+                    <div class="message-bubble">${escapeHtml(content)}</div>
+                `;
+            } else {
+                let displayName = sender;
+                let isSelf = (sender === '我' || sender === myNickname);
+                
+                messageDiv.className = isSelf ? 'message-item self' : 'message-item other';
+                displayName = isSelf ? '我' : sender;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-meta">
+                        <span class="message-name">${escapeHtml(displayName)}</span>
+                        <span class="message-time">${timeStr}</span>
+                    </div>
+                    <div class="message-bubble">${escapeHtml(content)}</div>
+                `;
+            }
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        // 启动连接
+        connect();
+    </script>
+</body>
+</html>
